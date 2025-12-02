@@ -1,0 +1,167 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  # ============================================
+  # DESKTOP - Lint, Build e Testes
+  # ============================================
+  desktop:
+    name: Desktop (Angular)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: solutio/package-lock.json
+
+      - name: Instalar dependências Desktop
+        working-directory: ./solutio
+        run: npm ci
+
+      - name: Executar Lint Desktop
+        working-directory: ./solutio
+        run: npm run lint
+
+      - name: Build Design System
+        working-directory: ./solutio
+        run: npm run build:ds
+
+      - name: Build Dashboard
+        working-directory: ./solutio
+        run: npm run build
+
+      - name: Executar Testes Unitários Desktop
+        working-directory: ./solutio
+        run: npm test
+        continue-on-error: false
+
+      - name: Upload Coverage Reports
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./solutio/coverage/dashboard/coverage-final.json
+          flags: desktop
+          name: desktop-coverage
+          fail_ci_if_error: false
+
+  # ============================================
+  # DESKTOP - Testes E2E
+  # ============================================
+  desktop-e2e:
+    name: Desktop E2E Tests
+    runs-on: ubuntu-latest
+    needs: desktop
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: solutio/package-lock.json
+
+      - name: Instalar dependências Desktop
+        working-directory: ./solutio
+        run: npm ci
+
+      - name: Build Dashboard para E2E
+        working-directory: ./solutio
+        run: npm run build
+
+      - name: Executar Testes E2E
+        working-directory: ./solutio
+        run: npm run e2e
+        continue-on-error: false
+
+      - name: Upload Screenshots (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots
+          path: solutio/dashboard-e2e/cypress/screenshots
+          retention-days: 7
+
+      - name: Upload Videos (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-videos
+          path: solutio/dashboard-e2e/cypress/videos
+          retention-days: 7
+
+  # ============================================
+  # MOBILE - Lint, Build e Testes
+  # ============================================
+  mobile:
+    name: Mobile (React Native/Expo)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: solutio-mobile/solutio-mobile-dashboard/package-lock.json
+
+      - name: Instalar dependências Mobile
+        working-directory: ./solutio-mobile/solutio-mobile-dashboard
+        run: npm ci
+
+      - name: Executar Lint Mobile
+        working-directory: ./solutio-mobile/solutio-mobile-dashboard
+        run: npm run lint
+
+      - name: Executar Testes Unitários Mobile
+        working-directory: ./solutio-mobile/solutio-mobile-dashboard
+        run: npm test
+        continue-on-error: false
+
+      - name: Executar Testes com Cobertura Mobile
+        working-directory: ./solutio-mobile/solutio-mobile-dashboard
+        run: npm run test:coverage
+        continue-on-error: false
+
+      - name: Upload Coverage Reports Mobile
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./solutio-mobile/solutio-mobile-dashboard/coverage/coverage-final.json
+          flags: mobile
+          name: mobile-coverage
+          fail_ci_if_error: false
+
+  # ============================================
+  # VALIDAÇÃO FINAL
+  # ============================================
+  validate:
+    name: Validação Final
+    runs-on: ubuntu-latest
+    needs: [desktop, desktop-e2e, mobile]
+    
+    steps:
+      - name: Verificar status dos jobs
+        run: |
+          echo "✅ Todos os jobs foram executados com sucesso!"
+          echo "✅ Desktop: Lint, Build e Testes - OK"
+          echo "✅ Desktop: Testes E2E - OK"
+          echo "✅ Mobile: Lint e Testes - OK"
+
