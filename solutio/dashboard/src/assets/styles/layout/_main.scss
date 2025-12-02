@@ -1,0 +1,67 @@
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: visible;
+  min-height: 0;
+  position: relative;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  @media (max-width: 576px) {
+    flex-direction: row;
+    overflow-x: hidden;
+  }
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--design-system-background-secondary);
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  
+  router-outlet + * {
+    display: block;
+    width: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+
+  @media (max-width: 576px) {
+    padding: 0.75rem;
+  }
+
+  @media (max-width: 400px) {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .layout__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &--visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+}
+

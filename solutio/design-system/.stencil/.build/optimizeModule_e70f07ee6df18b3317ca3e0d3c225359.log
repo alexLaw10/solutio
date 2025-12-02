@@ -1,0 +1,1 @@
+import{r as t,h as e}from"./p-BPlc3oes.js";function s(t,e,s){return(t||"")+(e?` ${e}`:"")+(s?` ${s}`:"")}const o=":host{display:block}";const r=class{constructor(e){t(this,e)}getText(){return s(this.first,this.middle,this.last)}render(){return e("div",{key:"093ba11abeb8e190edc424cf995b017f2ef1bbbd"},"Hello, World! I'm ",this.getText())}};r.style=o;export{r as my_component};

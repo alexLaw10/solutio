@@ -1,0 +1,1 @@
+import{r as t,h as e}from"./p-CbWtdIEl.js";function r(t,e,r){return(t||"")+(e?` ${e}`:"")+(r?` ${r}`:"")}const s=":host{display:block}";const o=class{constructor(e){t(this,e)}getText(){return r(this.first,this.middle,this.last)}render(){return e("div",{key:"093ba11abeb8e190edc424cf995b017f2ef1bbbd"},"Hello, World! I'm ",this.getText())}};o.style=s;export{o as my_component};

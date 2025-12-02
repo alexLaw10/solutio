@@ -1,0 +1,1 @@
+import{r as t,h as r}from"./p-BQrefWUo.js";function o(t,r,o){return(t||"")+(r?` ${r}`:"")+(o?` ${o}`:"")}const s=":host{display:block}";const e=class{constructor(r){t(this,r)}getText(){return o(this.first,this.middle,this.last)}render(){return r("div",{key:"6f0129a6c4ab77f27a09814d0844e373dca9324a"},"Hello, World! I'm ",this.getText())}};e.style=s;export{e as my_component};

@@ -1,0 +1,83 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nx/enforce-module-boundaries": "off"
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript", "prettier"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-var-requires": "error",
+        "@typescript-eslint/ban-ts-comment": [
+          "error",
+          {
+            "ts-expect-error": "allow-with-description",
+            "ts-ignore": true,
+            "ts-nocheck": true,
+            "ts-check": false
+          }
+        ],
+        "no-console": ["warn", { "allow": ["warn", "error"] }],
+        "no-debugger": "error",
+        "no-alert": "warn",
+        "no-duplicate-imports": "error",
+        "no-var": "error",
+        "prefer-const": "error",
+        "prefer-arrow-callback": "error",
+        "prefer-template": "error",
+        "object-shorthand": "error",
+        "no-useless-rename": "error",
+        "eqeqeq": ["error", "always", { "null": "ignore" }],
+        "curly": ["error", "all"],
+        "no-throw-literal": "error",
+        "no-return-await": "error"
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {
+        "no-console": ["warn", { "allow": ["warn", "error"] }],
+        "no-debugger": "error",
+        "no-alert": "warn",
+        "no-duplicate-imports": "error",
+        "no-var": "error",
+        "prefer-const": "error",
+        "prefer-arrow-callback": "error",
+        "prefer-template": "error",
+        "eqeqeq": ["error", "always", { "null": "ignore" }],
+        "curly": ["error", "all"]
+      }
+    },
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "no-console": "off"
+      }
+    }
+  ]
+}

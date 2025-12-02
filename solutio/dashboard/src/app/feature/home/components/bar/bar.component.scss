@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bar-loading,
+.bar-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: var(--design-system-text-secondary);
+  font-size: 0.9rem;
+}
+
+.bar-error {
+  color: var(--design-system-error);
+}
+
+@media (max-width: 768px) {
+  .bar-loading,
+  .bar-error {
+    padding: 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .bar-loading,
+  .bar-error {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}

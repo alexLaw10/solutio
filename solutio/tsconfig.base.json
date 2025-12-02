@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@solutio/design-system": ["design-system/src/index.ts"],
+      "@solutio/design-system/loader": ["dist/design-system/loader/index.js"],
+      "@shared/*": ["dashboard/src/app/shared/*"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

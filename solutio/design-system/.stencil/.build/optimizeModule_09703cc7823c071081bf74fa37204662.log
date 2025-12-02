@@ -1,0 +1,1 @@
+import{r as t,h as r}from"./p-XbFceDz6.js";function s(t,r,s){return(t||"")+(r?` ${r}`:"")+(s?` ${s}`:"")}const e=":host{display:block}";const o=class{constructor(r){t(this,r)}getText(){return s(this.first,this.middle,this.last)}render(){return r("div",{key:"83ab638e47c91d17dbcc943fd43785dfbdfe42af"},"Hello, World! I'm ",this.getText())}};o.style=e;export{o as my_component};
