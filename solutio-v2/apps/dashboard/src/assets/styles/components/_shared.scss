@@ -1,0 +1,22 @@
+.shared-card {
+  background: var(--design-system-background-primary);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px var(--design-system-shadow-sm);
+  box-sizing: border-box;
+}
+
+.shared-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.shared-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}

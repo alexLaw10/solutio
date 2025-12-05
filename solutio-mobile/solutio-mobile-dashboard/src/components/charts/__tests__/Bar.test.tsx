@@ -61,3 +61,5 @@ describe('Bar Component', () => {
   });
 });
 
+
+

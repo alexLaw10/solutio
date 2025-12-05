@@ -1,0 +1,25 @@
+{
+  "latitude": -7.1153,
+  "longitude": -34.8641,
+  "generationtime_ms": 0.1,
+  "utc_offset_seconds": -10800,
+  "timezone": "America/Fortaleza",
+  "hourly": {
+    "time": [],
+    "temperature_2m": [],
+    "precipitation_probability": [],
+    "relative_humidity_2m": [],
+    "windspeed_10m": [],
+    "weathercode": []
+  },
+  "daily": {
+    "time": [],
+    "weathercode": []
+  },
+  "current_weather": {
+    "temperature": 0,
+    "windspeed": 0,
+    "weathercode": 0,
+    "time": "2025-08-28T12:00"
+  }
+}

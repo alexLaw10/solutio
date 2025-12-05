@@ -1,0 +1,102 @@
+// Button Styles
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  background-color: var(--design-system-primary);
+  color: var(--design-system-white);
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+
+  &:hover:not(:disabled) {
+    background-color: var(--design-system-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--design-system-shadow-md);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--design-system-primary-active);
+    transform: translateY(0);
+    box-shadow: 0 1px 4px var(--design-system-shadow-sm);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--design-system-border-focus);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Button variants
+  &--secondary {
+    background-color: var(--design-system-secondary);
+    color: var(--design-system-text-primary);
+
+    &:hover:not(:disabled) {
+      background-color: var(--design-system-secondary-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--design-system-secondary-active);
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    color: var(--design-system-primary);
+    border-color: var(--design-system-primary);
+
+    &:hover:not(:disabled) {
+      background-color: var(--design-system-primary);
+      color: var(--design-system-white);
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: var(--design-system-primary);
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background-color: var(--design-system-background-secondary);
+    }
+  }
+
+  // Button sizes
+  &--sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    min-height: 2.25rem;
+    min-width: 2.25rem;
+  }
+
+  &--lg {
+    padding: 0.875rem 2rem;
+    font-size: 1.125rem;
+    min-height: 3.5rem;
+    min-width: 3.5rem;
+  }
+
+  &--full-width {
+    width: 100%;
+    min-width: 100%;
+  }
+}

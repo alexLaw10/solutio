@@ -1,0 +1,60 @@
+// Estilos para componentes customizados do design system
+// Estes estilos garantem que os elementos sejam visíveis mesmo antes dos componentes serem definidos
+
+design-system-date-input,
+design-system-select,
+design-system-search-button,
+design-system-load-more-button {
+  display: block;
+  width: 100%;
+  visibility: visible;
+  opacity: 1;
+}
+
+design-system-search-button,
+design-system-load-more-button {
+  display: inline-block;
+  width: auto;
+}
+
+// Fallback: se os componentes não estiverem definidos, mostrar como elementos HTML nativos
+design-system-date-input:not(:defined),
+design-system-select:not(:defined) {
+  display: block;
+  width: 100%;
+  
+  &::before {
+    content: '';
+    display: block;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.5;
+    color: var(--design-system-text-primary);
+    background-color: var(--design-system-background-primary);
+    border: 1px solid var(--design-system-border-primary);
+    border-radius: 4px;
+    box-sizing: border-box;
+    min-height: 2.75rem;
+  }
+}
+
+design-system-search-button:not(:defined),
+design-system-load-more-button:not(:defined) {
+  display: inline-block;
+  
+  &::before {
+    content: 'Botão';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: var(--design-system-primary);
+    color: var(--design-system-white);
+    border-radius: 4px;
+    min-height: 2.75rem;
+  }
+}

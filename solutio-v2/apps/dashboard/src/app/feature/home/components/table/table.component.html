@@ -1,0 +1,143 @@
+<div class="table-container">
+
+  <div 
+    *ngIf="warningMessage" 
+    class="warning" 
+    role="alert" 
+    aria-live="assertive"
+    aria-atomic="true">
+    {{ warningMessage }}
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="applyFilter()" aria-label="Filtros de busca de dados meteorológicos">
+    <fieldset class="filters">
+      <legend class="sr-only">Filtros de busca</legend>
+
+      <div class="filters__field">
+        <label for="start">Data de Início</label>
+        <input
+          type="date"
+          id="start"
+          name="start"
+          formControlName="start"
+          [min]="minDate"
+          [max]="maxDate"
+          required
+          (change)="onStartDateChange($event)">
+      </div>
+
+      <div class="filters__field">
+        <label for="end">Data de Fim</label>
+        <input
+          type="date"
+          id="end"
+          name="end"
+          formControlName="end"
+          [min]="minDate"
+          [max]="maxDate"
+          required
+          (change)="onEndDateChange($event)">
+      </div>
+
+      <div class="filters__field">
+        <label for="city">Cidade</label>
+        <select
+          id="city"
+          name="city"
+          formControlName="city"
+          required
+          (change)="onCityChange($event)">
+          <option value="" disabled>Selecione uma cidade</option>
+          <option *ngFor="let city of cityOptions" [value]="city.value">
+            {{ city.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filters__action">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="search-button"
+          [attr.aria-label]="'Buscar dados meteorológicos'">
+          <span *ngIf="loading" class="search-button__loader" aria-hidden="true"></span>
+          <span class="search-button__label">{{ loading ? 'Buscando...' : 'Buscar' }}</span>
+        </button>
+      </div>
+    </fieldset>
+  </form>
+
+  <div 
+    *ngIf="loading" 
+    class="loading" 
+    role="status" 
+    aria-live="polite"
+    aria-atomic="true"
+    aria-label="Carregando dados">
+    <span class="loading__spinner" aria-hidden="true"></span>
+    <span>Carregando dados meteorológicos...</span>
+  </div>
+
+  <div *ngIf="!loading && displayedData.length > 0" role="region" aria-label="Tabela de dados meteorológicos">
+    <table role="table" aria-label="Séries horárias de dados meteorológicos">
+      <caption class="sr-only">Tabela contendo dados meteorológicos por hora incluindo data, temperatura, probabilidade de precipitação, umidade e vento</caption>
+      <thead>
+        <tr>
+          <th scope="col">Data</th>
+          <th scope="col">Temperatura (°C)</th>
+          <th scope="col">Precip (%)</th>
+          <th scope="col">Umidade</th>
+          <th scope="col">Vento</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of displayedData; trackBy: trackByRow">
+          <td>
+            <time [dateTime]="row.time">{{ row.time | dateFormat:'short' }}</time>
+          </td>
+          <td>
+            <span [attr.aria-label]="getTemperatureAriaLabel(row.temp)">{{ row.temp }}°C</span>
+          </td>
+          <td>
+            <span [attr.aria-label]="getPrecipitationAriaLabel(row.prec)">{{ row.prec }}%</span>
+          </td>
+          <td>
+            <span [attr.aria-label]="getHumidityAriaLabel(row.hum)">{{ row.hum | percentage }}</span>
+          </td>
+          <td>
+            <span [attr.aria-label]="getWindSpeedAriaLabel(row.wind)">{{ row.wind | speed }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div 
+      *ngIf="displayedData.length === 0"
+      role="status"
+      aria-live="polite"
+      class="table-container__empty">
+      <p>Nenhum dado disponível para os filtros selecionados.</p>
+    </div>
+  </div>
+
+  <div *ngIf="showLoadMoreButton" class="table-container__load-more">
+    <button
+      type="button"
+      [disabled]="loadingMore"
+      class="search-button"
+      [attr.aria-label]="'Carregar mais registros. Atualmente exibindo ' + displayedData.length + ' de ' + tableData.length + ' registros'"
+      (click)="loadMore()">
+      <span *ngIf="loadingMore" class="search-button__loader" aria-hidden="true"></span>
+      <span class="search-button__label">{{ loadingMore ? 'Carregando...' : 'Carregar mais' }}</span>
+    </button>
+    <p class="table-container__info" aria-live="polite">
+      Exibindo <span class="sr-only">dados</span> {{ displayedData.length }} de {{ tableData.length }} registros
+    </p>
+  </div>
+
+  <div *ngIf="showAllLoadedMessage" class="table-container__all-loaded" role="status" aria-live="polite">
+    <p>Todos os {{ tableData.length }} registros estão sendo exibidos</p>
+  </div>
+
+</div>

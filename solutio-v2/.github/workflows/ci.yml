@@ -1,0 +1,227 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop, master ]
+  pull_request:
+    branches: [ main, develop, master ]
+  workflow_dispatch:
+
+jobs:
+  # ============================================
+  # LINT
+  # ============================================
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Nx Cache
+        uses: actions/cache@v4
+        with:
+          path: solutio-v2/.nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('solutio-v2/nx.json', 'solutio-v2/package-lock.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Instalar dependências
+        working-directory: ./solutio-v2
+        run: npm ci
+
+      - name: Executar Lint Dashboard
+        working-directory: ./solutio-v2
+        run: npm run lint
+
+      - name: Executar Lint Design System
+        working-directory: ./solutio-v2
+        run: npm run lint:ds
+        continue-on-error: true
+
+  # ============================================
+  # BUILD
+  # ============================================
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Nx Cache
+        uses: actions/cache@v4
+        with:
+          path: solutio-v2/.nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('solutio-v2/nx.json', 'solutio-v2/package-lock.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Instalar dependências
+        working-directory: ./solutio-v2
+        run: npm ci
+
+      - name: Build Design System
+        working-directory: ./solutio-v2
+        run: npm run build:ds
+        continue-on-error: true
+
+      - name: Build Dashboard
+        working-directory: ./solutio-v2
+        run: npm run build
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            solutio-v2/dist/apps/dashboard
+            solutio-v2/dist/libs/solutio-ds
+          retention-days: 7
+
+  # ============================================
+  # TESTES UNITÁRIOS
+  # ============================================
+  test:
+    name: Testes Unitários
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Nx Cache
+        uses: actions/cache@v4
+        with:
+          path: solutio-v2/.nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('solutio-v2/nx.json', 'solutio-v2/package-lock.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Instalar dependências
+        working-directory: ./solutio-v2
+        run: npm ci
+
+      - name: Executar Testes Unitários com Coverage
+        working-directory: ./solutio-v2
+        run: npm run test
+        continue-on-error: false
+
+      - name: Upload Coverage Reports
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./solutio-v2/coverage/apps/dashboard/coverage-final.json
+          flags: dashboard
+          name: dashboard-coverage
+          fail_ci_if_error: false
+
+      - name: Upload Coverage Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: solutio-v2/coverage/
+          retention-days: 30
+
+  # ============================================
+  # TESTES E2E
+  # ============================================
+  e2e:
+    name: Testes E2E
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Nx Cache
+        uses: actions/cache@v4
+        with:
+          path: solutio-v2/.nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('solutio-v2/nx.json', 'solutio-v2/package-lock.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
+
+      - name: Instalar dependências
+        working-directory: ./solutio-v2
+        run: npm ci
+
+      - name: Executar Testes E2E
+        working-directory: ./solutio-v2
+        run: nx e2e dashboard-e2e --configuration=ci
+        continue-on-error: false
+        env:
+          CI: true
+
+      - name: Upload Screenshots (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: solutio-v2/apps/dashboard-e2e/cypress/screenshots
+          retention-days: 7
+
+      - name: Upload Videos (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: solutio-v2/apps/dashboard-e2e/cypress/videos
+          retention-days: 7
+
+      - name: Upload E2E Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports
+          path: solutio-v2/apps/dashboard-e2e/cypress/reports
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ============================================
+  # VALIDAÇÃO FINAL
+  # ============================================
+  validate:
+    name: Validação Final
+    runs-on: ubuntu-latest
+    needs: [lint, build, test, e2e]
+    
+    steps:
+      - name: Verificar status dos jobs
+        run: |
+          echo "✅ Todos os jobs foram executados com sucesso!"
+          echo "✅ Lint - OK"
+          echo "✅ Build - OK"
+          echo "✅ Testes Unitários - OK"
+          echo "✅ Testes E2E - OK"

@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
+  width: 100%;
+}
+
+solutio-v2-sidebar {
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 576px) {
+    position: fixed;
+  }
+}

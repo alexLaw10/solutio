@@ -1,0 +1,13 @@
+// Design Tokens - Borders
+:root {
+  // Border Radius
+  --border-radius-sm: 0.25rem;   // 4px
+  --border-radius-md: 0.5rem;    // 8px
+  --border-radius-lg: 1rem;      // 16px
+  --border-radius-full: 9999px;  // Full circle
+  
+  // Border Width
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+}

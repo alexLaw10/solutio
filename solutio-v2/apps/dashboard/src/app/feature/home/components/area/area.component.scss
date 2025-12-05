@@ -1,0 +1,20 @@
+.area-loading,
+.area-error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.area-error {
+  color: var(--color-danger);
+  background: rgba(220, 53, 69, 0.1);
+}
+
+[data-theme="dark"] {
+  .area-loading {
+    background: var(--color-gray-800);
+  }
+}

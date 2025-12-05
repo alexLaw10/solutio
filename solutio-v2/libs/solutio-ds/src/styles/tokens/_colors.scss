@@ -1,0 +1,51 @@
+// Design Tokens - Colors
+:root {
+  // Primary Colors
+  --color-primary: #007bff;
+  --color-primary-dark: #0056b3;
+  --color-primary-light: #66b3ff;
+  
+  // Secondary Colors
+  --color-secondary: #6c757d;
+  --color-secondary-dark: #545b62;
+  --color-secondary-light: #adb5bd;
+  
+  // Success Colors
+  --color-success: #28a745;
+  --color-success-dark: #1e7e34;
+  --color-success-light: #71dd8a;
+  
+  // Danger Colors
+  --color-danger: #dc3545;
+  --color-danger-dark: #c82333;
+  --color-danger-light: #e4606d;
+  
+  // Warning Colors
+  --color-warning: #ffc107;
+  --color-warning-dark: #e0a800;
+  --color-warning-light: #ffcd39;
+  
+  // Info Colors
+  --color-info: #17a2b8;
+  --color-info-dark: #138496;
+  --color-info-light: #5bc0de;
+  
+  // Neutral Colors
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-100: #f8f9fa;
+  --color-gray-200: #e9ecef;
+  --color-gray-300: #dee2e6;
+  --color-gray-400: #ced4da;
+  --color-gray-500: #adb5bd;
+  --color-gray-600: #6c757d;
+  --color-gray-700: #495057;
+  --color-gray-800: #343a40;
+  --color-gray-900: #212529;
+  
+  // Text Colors
+  --color-text-primary: #212529;
+  --color-text-secondary: #6c757d;
+  --color-text-muted: #adb5bd;
+  --color-text-inverse: #ffffff;
+}

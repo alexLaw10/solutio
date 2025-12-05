@@ -1,0 +1,12 @@
+<nav class="navbar" role="navigation" aria-label="Navegação principal">
+  <div class="navbar__container">
+    <div class="navbar__brand">
+      <h1 class="navbar__title">
+        <a href="/" [attr.aria-label]="title + ' - Página inicial'" class="navbar__title-link">{{ title }}</a>
+      </h1>
+    </div>
+    <div class="navbar__actions" role="toolbar" aria-label="Ações da barra de navegação">
+      <solutio-v2-theme-toggle aria-label="Alternar tema"></solutio-v2-theme-toggle>
+    </div>
+  </div>
+</nav>

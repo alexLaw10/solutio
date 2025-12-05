@@ -1,0 +1,20 @@
+.donut-loading,
+.donut-error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.donut-error {
+  color: var(--color-danger);
+  background: rgba(220, 53, 69, 0.1);
+}
+
+[data-theme="dark"] {
+  .donut-loading {
+    background: var(--color-gray-800);
+  }
+}
