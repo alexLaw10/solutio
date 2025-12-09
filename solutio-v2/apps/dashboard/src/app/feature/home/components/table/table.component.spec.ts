@@ -151,14 +151,20 @@ describe('TableComponent', () => {
     expect(component.displayedData.length).toBe(initialLength);
   }));
 
-  it('should update location when city changes', () => {
+  it('should update form city on change and update location only on applyFilter', () => {
     component.ngOnInit();
+    weatherDataService.updateLocation.mockClear();
     const event = {
       target: { value: 'São Paulo' },
     } as unknown as Event;
 
     component.onCityChange(event);
     expect(component.form.get('city')?.value).toBe('São Paulo');
+
+    // Ainda não chama updateLocation até aplicar o filtro
+    expect(weatherDataService.updateLocation).not.toHaveBeenCalled();
+
+    component.applyFilter();
     expect(weatherDataService.updateLocation).toHaveBeenCalledWith(-23.5505, -46.6333);
   });
 
@@ -298,28 +304,31 @@ describe('TableComponent', () => {
 
   it('should handle onStartDateChange event', () => {
     component.ngOnInit();
+    weatherDataService.updateLocation.mockClear();
     const event = {
       target: { value: '2025-09-01' },
     } as unknown as Event;
 
     component.onStartDateChange(event);
     expect(component.form.get('start')?.value).toBe('2025-09-01');
-    expect(weatherDataService.updateLocation).toHaveBeenCalled();
+    expect(weatherDataService.updateLocation).not.toHaveBeenCalled();
   });
 
   it('should handle onEndDateChange event', () => {
     component.ngOnInit();
+    weatherDataService.updateLocation.mockClear();
     const event = {
       target: { value: '2025-09-05' },
     } as unknown as Event;
 
     component.onEndDateChange(event);
     expect(component.form.get('end')?.value).toBe('2025-09-05');
-    expect(weatherDataService.updateLocation).toHaveBeenCalled();
+    expect(weatherDataService.updateLocation).not.toHaveBeenCalled();
   });
 
   it('should not update when event target value is null', () => {
     component.ngOnInit();
+    weatherDataService.updateLocation.mockClear();
     const initialStart = component.form.get('start')?.value;
     const event = {
       target: { value: null },
@@ -327,6 +336,7 @@ describe('TableComponent', () => {
 
     component.onStartDateChange(event);
     expect(component.form.get('start')?.value).toBe(initialStart);
+    expect(weatherDataService.updateLocation).not.toHaveBeenCalled();
   });
 
   it('should validate and adjust start date when before min date', () => {
@@ -472,7 +482,7 @@ describe('TableComponent', () => {
     component.ngOnInit();
     tick();
 
-    forecastSubject.next(dataWithUndefinedPrec as any);
+    forecastSubject.next(dataWithUndefinedPrec as OpenMeteoForecastRoot);
     tick();
     fixture.detectChanges();
 
@@ -538,16 +548,20 @@ describe('TableComponent', () => {
     expect(component.showAllLoadedMessage).toBe(false);
   }));
 
-  it('should handle all cities in onCityChange', () => {
+  it('should handle all cities in onCityChange and update only after applyFilter', () => {
     component.ngOnInit();
 
     component.cities.forEach(city => {
+      weatherDataService.updateLocation.mockClear();
       const event = {
         target: { value: city.name },
       } as unknown as Event;
 
       component.onCityChange(event);
       expect(component.form.get('city')?.value).toBe(city.name);
+      expect(weatherDataService.updateLocation).not.toHaveBeenCalled();
+
+      component.applyFilter();
       expect(weatherDataService.updateLocation).toHaveBeenCalledWith(city.lat, city.lng);
     });
   });

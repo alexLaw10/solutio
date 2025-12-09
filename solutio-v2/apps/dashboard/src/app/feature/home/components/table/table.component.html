@@ -9,72 +9,26 @@
     {{ warningMessage }}
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="applyFilter()" aria-label="Filtros de busca de dados meteorológicos">
-    <fieldset class="filters">
-      <legend class="sr-only">Filtros de busca</legend>
-
-      <div class="filters__field">
-        <label for="start">Data de Início</label>
-        <input
-          type="date"
-          id="start"
-          name="start"
-          formControlName="start"
-          [min]="minDate"
-          [max]="maxDate"
-          required
-          (change)="onStartDateChange($event)">
-      </div>
-
-      <div class="filters__field">
-        <label for="end">Data de Fim</label>
-        <input
-          type="date"
-          id="end"
-          name="end"
-          formControlName="end"
-          [min]="minDate"
-          [max]="maxDate"
-          required
-          (change)="onEndDateChange($event)">
-      </div>
-
-      <div class="filters__field">
-        <label for="city">Cidade</label>
-        <select
-          id="city"
-          name="city"
-          formControlName="city"
-          required
-          (change)="onCityChange($event)">
-          <option value="" disabled>Selecione uma cidade</option>
-          <option *ngFor="let city of cityOptions" [value]="city.value">
-            {{ city.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="filters__action">
-        <button
-          type="submit"
-          [disabled]="loading"
-          class="search-button"
-          [attr.aria-label]="'Buscar dados meteorológicos'">
-          <span *ngIf="loading" class="search-button__loader" aria-hidden="true"></span>
-          <span class="search-button__label">{{ loading ? 'Buscando...' : 'Buscar' }}</span>
-        </button>
-      </div>
-    </fieldset>
-  </form>
+  <solutio-v2-filter
+    [form]="form"
+    [loading]="loading"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [cityOptions]="cityOptions"
+    (startChange)="onStartDateChange($event)"
+    (endChange)="onEndDateChange($event)"
+    (cityChange)="onCityChange($event)"
+    (submitFilter)="applyFilter()"
+  ></solutio-v2-filter>
 
   <div 
-    *ngIf="loading" 
+    *ngIf="loading"
     class="loading" 
-    role="status" 
+    role="status"
     aria-live="polite"
     aria-atomic="true"
     aria-label="Carregando dados">
-    <span class="loading__spinner" aria-hidden="true"></span>
+    <solutio-v2-spinner size="md"></solutio-v2-spinner>
     <span>Carregando dados meteorológicos...</span>
   </div>
 
@@ -124,12 +78,12 @@
   <div *ngIf="showLoadMoreButton" class="table-container__load-more">
     <button
       type="button"
+      class="btn btn--primary"
       [disabled]="loadingMore"
-      class="search-button"
       [attr.aria-label]="'Carregar mais registros. Atualmente exibindo ' + displayedData.length + ' de ' + tableData.length + ' registros'"
       (click)="loadMore()">
-      <span *ngIf="loadingMore" class="search-button__loader" aria-hidden="true"></span>
-      <span class="search-button__label">{{ loadingMore ? 'Carregando...' : 'Carregar mais' }}</span>
+      <solutio-v2-spinner *ngIf="loadingMore" size="sm" color="white"></solutio-v2-spinner>
+      {{ loadingMore ? 'Carregando...' : 'Carregar mais' }}
     </button>
     <p class="table-container__info" aria-live="polite">
       Exibindo <span class="sr-only">dados</span> {{ displayedData.length }} de {{ tableData.length }} registros

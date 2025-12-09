@@ -85,9 +85,9 @@ describe('HomeComponent', () => {
   }));
 
   it('should set currentTemp to 0 when current_weather is not available', fakeAsync(() => {
-    const dataWithoutCurrentWeather = {
+    const dataWithoutCurrentWeather: Partial<OpenMeteoForecastRoot> = {
       ...mockForecastData,
-      current_weather: undefined as any,
+      current_weather: undefined,
     };
 
     component.ngOnInit();

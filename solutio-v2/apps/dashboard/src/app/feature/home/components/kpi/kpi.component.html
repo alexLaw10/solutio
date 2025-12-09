@@ -28,7 +28,8 @@
 </div>
 
 <ng-template #loadingTpl>
-  <div role="status" aria-live="polite" aria-label="Carregando indicadores">
+  <div role="status" aria-live="polite" aria-label="Carregando indicadores" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 2rem;">
+    <solutio-v2-spinner size="md"></solutio-v2-spinner>
     <p>Carregando KPIs...</p>
   </div>
 </ng-template>

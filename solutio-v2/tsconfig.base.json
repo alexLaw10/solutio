@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@solutio-v2/solutio-ds": ["libs/solutio-ds/src/index.ts"],
-      "@solutio-v2/solutio-ds/loader": ["libs/solutio-ds/loader/index.js"]
+      "@solutio-v2/solutio-ds/loader": ["libs/solutio-ds/loader/index.d.ts", "libs/solutio-ds/loader/index.js"]
     }
   },
   "exclude": ["node_modules", "tmp"]

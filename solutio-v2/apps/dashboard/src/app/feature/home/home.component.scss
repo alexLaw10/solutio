@@ -39,7 +39,7 @@
   }
 
   &__card {
-    background: var(--color-white);
+    background: var(--design-system-background-primary);
     border-radius: var(--border-radius-lg);
     padding: 1rem 1.25rem;
     box-shadow: var(--shadow-sm);
@@ -59,13 +59,13 @@
     margin: 0;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
+    color: var(--design-system-text-primary);
   }
 
   &__card-subtitle {
     margin: 0.125rem 0 0;
     font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+    color: var(--design-system-text-secondary);
   }
 
   &__card-body {
@@ -217,6 +217,6 @@
 
 [data-theme="dark"] .home {
   &__card {
-    background: var(--color-gray-800);
+    background: var(--design-system-background-secondary);
   }
 }

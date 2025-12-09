@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, Event } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Subject } from 'rxjs';
 import { SidebarComponent } from './sidebar.component';
@@ -13,7 +13,7 @@ describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
   let router: Router;
-  let navigationSubject: Subject<any>;
+  let navigationSubject: Subject<Event>;
 
   beforeEach(async () => {
     navigationSubject = new Subject();

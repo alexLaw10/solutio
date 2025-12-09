@@ -43,5 +43,6 @@ export type DonutOptions = {
   labels: string[];
   legend: ApexLegend;
   responsive: ApexResponsive[];
-  plotOptions?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  plotOptions?: any; // ApexCharts doesn't export ApexPlotOptions type
 };

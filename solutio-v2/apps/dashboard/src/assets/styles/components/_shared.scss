@@ -1,6 +1,6 @@
 .shared-card {
   background: var(--design-system-background-primary);
-  border-radius: 12px;
+  border-radius: var(--border-radius-lg);
   padding: 1rem 1.25rem;
   box-shadow: 0 2px 8px var(--design-system-shadow-sm);
   box-sizing: border-box;

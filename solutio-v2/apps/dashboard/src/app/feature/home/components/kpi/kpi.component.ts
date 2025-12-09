@@ -2,11 +2,13 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { CommonModule } from '@angular/common';
 import { WeatherDataService } from '../../../../core/services/weather-data.service';
 import { Subject, takeUntil, filter } from 'rxjs';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { OpenMeteoForecastRoot } from '../../../../core/interfaces/open-meteo-forecast';
 
 @Component({
   selector: 'solutio-v2-kpi',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SpinnerComponent],
   templateUrl: './kpi.component.html',
   styleUrls: ['./kpi.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -51,7 +53,7 @@ export class KpiComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private processKpiData(res: any): void {
+  private processKpiData(res: OpenMeteoForecastRoot): void {
     const temps = res.hourly?.temperature_2m ?? [];
 
     if (!temps.length) {

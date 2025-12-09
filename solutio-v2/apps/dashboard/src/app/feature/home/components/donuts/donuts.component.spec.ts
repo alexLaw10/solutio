@@ -15,7 +15,6 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 describe('DonutsComponent', () => {
   let component: DonutsComponent;
   let fixture: ComponentFixture<DonutsComponent>;
-  let weatherDataService: jest.Mocked<WeatherDataService>;
   let forecastSubject: BehaviorSubject<OpenMeteoForecastRoot | null>;
   let loadingSubject: BehaviorSubject<boolean>;
   let errorSubject: BehaviorSubject<string | null>;
@@ -61,7 +60,6 @@ describe('DonutsComponent', () => {
 
     fixture = TestBed.createComponent(DonutsComponent);
     component = fixture.componentInstance;
-    weatherDataService = TestBed.inject(WeatherDataService) as jest.Mocked<WeatherDataService>;
   });
 
   it('should create', () => {
@@ -88,9 +86,9 @@ describe('DonutsComponent', () => {
   }));
 
   it('should set error when current_weather temperature is undefined', fakeAsync(() => {
-    const dataWithoutTemp = {
+    const dataWithoutTemp: Partial<OpenMeteoForecastRoot> = {
       ...mockForecastData,
-      current_weather: undefined as any,
+      current_weather: undefined,
     };
 
     component.ngOnInit();
@@ -104,11 +102,11 @@ describe('DonutsComponent', () => {
   }));
 
   it('should set error when current_weather temperature is null', fakeAsync(() => {
-    const dataWithNullTemp = {
+    const dataWithNullTemp: Partial<OpenMeteoForecastRoot> = {
       ...mockForecastData,
       current_weather: {
         ...mockForecastData.current_weather,
-        temperature: null as any,
+        temperature: null as unknown as number,
       },
     };
 

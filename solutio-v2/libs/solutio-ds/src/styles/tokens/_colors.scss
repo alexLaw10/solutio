@@ -1,51 +1,276 @@
 // Design Tokens - Colors
+// Sistema completo de cores com suporte a dark mode
+
+// ==========================================
+// Palette Base (SCSS Variables)
+// ==========================================
+
+// Blue Palette
+$color-blue-50: #e3f2fd;
+$color-blue-100: #bbdefb;
+$color-blue-300: #64b5f6;
+$color-blue-400: #42a5f5;
+$color-blue-500: #1976d2;
+$color-blue-600: #1565c0;
+$color-blue-700: #0d47a1;
+
+// Dark Mode Background Palette
+$color-dark-bg-900: #121212;
+$color-dark-bg-800: #1e1e1e;
+$color-dark-bg-700: #252525;
+$color-dark-bg-600: #2d2d2d;
+
+// Dark Mode Gray Palette
+$color-dark-gray-600: #757575;
+$color-dark-gray-500: #9e9e9e;
+$color-dark-gray-400: #bdbdbd;
+$color-dark-gray-300: #e0e0e0;
+
+// Gray Palette
+$color-gray-50: #fafafa;
+$color-gray-100: #f5f5f5;
+$color-gray-200: #eeeeee;
+$color-gray-300: #e0e0e0;
+$color-gray-400: #bdbdbd;
+$color-gray-500: #9e9e9e;
+$color-gray-600: #757575;
+$color-gray-700: #616161;
+$color-gray-800: #424242;
+$color-gray-900: #212121;
+
+// Green Palette
+$color-green-400: #66bb6a;
+$color-green-500: #28a745;
+$color-green-600: #218838;
+
+// Red Palette
+$color-red-400: #ef5350;
+$color-red-500: #dc3545;
+$color-red-600: #c82333;
+
+// Base Colors
+$color-white: #ffffff;
+$color-black: #000000;
+
+// ==========================================
+// Semantic Colors (Design System Tokens)
+// ==========================================
+
+// Primary Colors
+$ds-primary: $color-blue-500;
+$ds-primary-hover: $color-blue-600;
+$ds-primary-active: $color-blue-700;
+
+// Secondary Colors
+$ds-secondary: $color-gray-100;
+$ds-secondary-hover: #e8e8e8;
+$ds-secondary-active: #d0d0d0;
+
+// Text Colors
+$ds-text-primary: $color-gray-900;
+$ds-text-secondary: #666;
+$ds-text-tertiary: $color-gray-500;
+$ds-text-muted: $color-gray-600;
+
+// Background Colors
+$ds-background-primary: $color-white;
+$ds-background-secondary: #f8f9fa;
+$ds-background-tertiary: $color-gray-100;
+
+// Border Colors
+$ds-border-primary: $color-gray-300;
+$ds-border-secondary: #d0d0d0;
+$ds-border-focus: $ds-primary;
+
+// Semantic Colors
+$ds-success: $color-green-500;
+$ds-error: $color-red-500;
+
+// Shadow Colors
+$ds-shadow-sm: rgba(0, 0, 0, 0.06);
+$ds-shadow-md: rgba(0, 0, 0, 0.1);
+
+// ==========================================
+// CSS Custom Properties - Light Mode (Default)
+// ==========================================
+
 :root {
-  // Primary Colors
-  --color-primary: #007bff;
-  --color-primary-dark: #0056b3;
-  --color-primary-light: #66b3ff;
+  // Primary
+  --design-system-primary: #{$ds-primary};
+  --design-system-primary-hover: #{$ds-primary-hover};
+  --design-system-primary-active: #{$ds-primary-active};
+
+  // Secondary
+  --design-system-secondary: #{$ds-secondary};
+  --design-system-secondary-hover: #{$ds-secondary-hover};
+  --design-system-secondary-active: #{$ds-secondary-active};
+
+  // Text
+  --design-system-text-primary: #{$ds-text-primary};
+  --design-system-text-secondary: #{$ds-text-secondary};
+  --design-system-text-tertiary: #{$ds-text-tertiary};
+  --design-system-text-muted: #{$ds-text-muted};
+
+  // Background
+  --design-system-background-primary: #{$ds-background-primary};
+  --design-system-background-secondary: #{$ds-background-secondary};
+  --design-system-background-tertiary: #{$ds-background-tertiary};
+
+  // Border
+  --design-system-border-primary: #{$ds-border-primary};
+  --design-system-border-secondary: #{$ds-border-secondary};
+  --design-system-border-focus: #{$ds-border-focus};
+
+  // Semantic
+  --design-system-success: #{$ds-success};
+  --design-system-error: #{$ds-error};
   
-  // Secondary Colors
-  --color-secondary: #6c757d;
-  --color-secondary-dark: #545b62;
-  --color-secondary-light: #adb5bd;
+  // Semantic Backgrounds (with opacity)
+  --design-system-success-bg: rgba(40, 167, 69, 0.1);
+  --design-system-error-bg: rgba(220, 53, 69, 0.1);
+
+  // Base
+  --design-system-white: #{$color-white};
+  --design-system-black: #{$color-black};
   
-  // Success Colors
-  --color-success: #28a745;
-  --color-success-dark: #1e7e34;
-  --color-success-light: #71dd8a;
+  // Shadows
+  --design-system-shadow-sm: #{$ds-shadow-sm};
+  --design-system-shadow-md: #{$ds-shadow-md};
+
+  // Legacy color tokens (para compatibilidade com componentes existentes)
+  --color-primary: #{$ds-primary};
+  --color-primary-dark: #{$ds-primary-active};
+  --color-primary-light: #{$color-blue-300};
   
-  // Danger Colors
-  --color-danger: #dc3545;
-  --color-danger-dark: #c82333;
-  --color-danger-light: #e4606d;
+  --color-secondary: #{$color-gray-600};
+  --color-secondary-dark: #{$color-gray-700};
+  --color-secondary-light: #{$color-gray-400};
   
-  // Warning Colors
+  --color-success: #{$ds-success};
+  --color-success-dark: #{$color-green-600};
+  --color-success-light: #{$color-green-400};
+  
+  --color-danger: #{$ds-error};
+  --color-danger-dark: #{$color-red-600};
+  --color-danger-light: #{$color-red-400};
+  
   --color-warning: #ffc107;
   --color-warning-dark: #e0a800;
   --color-warning-light: #ffcd39;
   
-  // Info Colors
   --color-info: #17a2b8;
   --color-info-dark: #138496;
   --color-info-light: #5bc0de;
   
-  // Neutral Colors
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-gray-100: #f8f9fa;
-  --color-gray-200: #e9ecef;
-  --color-gray-300: #dee2e6;
-  --color-gray-400: #ced4da;
-  --color-gray-500: #adb5bd;
-  --color-gray-600: #6c757d;
-  --color-gray-700: #495057;
-  --color-gray-800: #343a40;
-  --color-gray-900: #212529;
+  --color-white: #{$color-white};
+  --color-black: #{$color-black};
+  --color-gray-100: #{$color-gray-100};
+  --color-gray-200: #{$color-gray-200};
+  --color-gray-300: #{$color-gray-300};
+  --color-gray-400: #{$color-gray-400};
+  --color-gray-500: #{$color-gray-500};
+  --color-gray-600: #{$color-gray-600};
+  --color-gray-700: #{$color-gray-700};
+  --color-gray-800: #{$color-gray-800};
+  --color-gray-900: #{$color-gray-900};
   
-  // Text Colors
-  --color-text-primary: #212529;
-  --color-text-secondary: #6c757d;
-  --color-text-muted: #adb5bd;
-  --color-text-inverse: #ffffff;
+  --color-text-primary: #{$ds-text-primary};
+  --color-text-secondary: #{$ds-text-secondary};
+  --color-text-muted: #{$ds-text-muted};
+  --color-text-inverse: #{$color-white};
+}
+
+// ==========================================
+// CSS Custom Properties - Dark Mode
+// ==========================================
+
+:root[data-theme="dark"],
+[data-theme="dark"] {
+  // Primary
+  --design-system-primary: #{$color-blue-400};
+  --design-system-primary-hover: #{$color-blue-300};
+  --design-system-primary-active: #{$color-blue-500};
+
+  // Secondary
+  --design-system-secondary: #{$color-dark-bg-700};
+  --design-system-secondary-hover: #{$color-dark-bg-600};
+  --design-system-secondary-active: #{$color-dark-gray-600};
+
+  // Text
+  --design-system-text-primary: #{$color-dark-gray-300};
+  --design-system-text-secondary: #{$color-dark-gray-400};
+  --design-system-text-tertiary: #{$color-dark-gray-500};
+  --design-system-text-muted: #{$color-dark-gray-600};
+
+  // Background
+  --design-system-background-primary: #{$color-dark-bg-900};
+  --design-system-background-secondary: #{$color-dark-bg-800};
+  --design-system-background-tertiary: #{$color-dark-bg-700};
+
+  // Border
+  --design-system-border-primary: #{$color-dark-bg-600};
+  --design-system-border-secondary: #{$color-dark-bg-700};
+  --design-system-border-focus: #{$color-blue-400};
+
+  // Semantic
+  --design-system-success: #{$color-green-400};
+  --design-system-error: #{$color-red-400};
+  
+  // Semantic Backgrounds (with opacity)
+  --design-system-success-bg: rgba(102, 187, 106, 0.1);
+  --design-system-error-bg: rgba(239, 83, 80, 0.1);
+
+  // Base
+  --design-system-white: #{$color-white};
+  --design-system-black: #{$color-black};
+
+  // Shadows
+  --design-system-shadow-sm: rgba(0, 0, 0, 0.4);
+  --design-system-shadow-md: rgba(0, 0, 0, 0.6);
+}
+
+// ==========================================
+// CSS Custom Properties - Dark Mode (Prefers Color Scheme)
+// ==========================================
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    // Primary
+    --design-system-primary: #{$color-blue-400};
+    --design-system-primary-hover: #{$color-blue-300};
+    --design-system-primary-active: #{$color-blue-500};
+  
+    // Secondary
+    --design-system-secondary: #{$color-dark-bg-700};
+    --design-system-secondary-hover: #{$color-dark-bg-600};
+    --design-system-secondary-active: #{$color-dark-gray-600};
+
+    // Text
+    --design-system-text-primary: #{$color-dark-gray-300};
+    --design-system-text-secondary: #{$color-dark-gray-400};
+    --design-system-text-tertiary: #{$color-dark-gray-500};
+    --design-system-text-muted: #{$color-dark-gray-600};
+
+    // Background
+    --design-system-background-primary: #{$color-dark-bg-900};
+    --design-system-background-secondary: #{$color-dark-bg-800};
+    --design-system-background-tertiary: #{$color-dark-bg-700};
+
+    // Border
+    --design-system-border-primary: #{$color-dark-bg-600};
+    --design-system-border-secondary: #{$color-dark-bg-700};
+    --design-system-border-focus: #{$color-blue-400};
+
+    // Semantic
+    --design-system-success: #{$color-green-400};
+    --design-system-error: #{$color-red-400};
+    
+    // Semantic Backgrounds (with opacity)
+    --design-system-success-bg: rgba(102, 187, 106, 0.1);
+    --design-system-error-bg: rgba(239, 83, 80, 0.1);
+
+    // Shadows
+    --design-system-shadow-sm: rgba(0, 0, 0, 0.4);
+    --design-system-shadow-md: rgba(0, 0, 0, 0.6);
+  }
 }

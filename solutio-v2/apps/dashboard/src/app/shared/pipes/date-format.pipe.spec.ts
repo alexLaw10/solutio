@@ -63,6 +63,7 @@ describe('DateFormatPipe', () => {
 
   it('should handle unknown format by defaulting to short', () => {
     const date = new Date('2025-08-28T10:30:00');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = pipe.transform(date.toISOString(), 'unknown' as any);
     expect(result).toContain('28/08/2025');
   });

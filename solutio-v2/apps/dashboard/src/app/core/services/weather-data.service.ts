@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { OpenMeteoService } from './open.service';
 import { OpenMeteoForecastRoot } from '../interfaces/open-meteo-forecast';
+import { ERROR_MESSAGES } from '../constants/messages';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +68,7 @@ export class WeatherDataService {
           this.loading$.next(false);
         }),
         catchError((error) => {
-          this.error$.next(error.message || 'Erro ao carregar dados meteorológicos');
+          this.error$.next(error.message || ERROR_MESSAGES.LOAD_WEATHER_DATA);
           this.loading$.next(false);
           return throwError(() => error);
         })

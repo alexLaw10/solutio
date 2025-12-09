@@ -90,7 +90,11 @@ describe('ThemeToggleComponent', () => {
 
   it('should unsubscribe on destroy', () => {
     fixture.detectChanges();
-    const unsubscribeSpy = jest.spyOn(component['themeSubscription']!, 'unsubscribe');
+    const themeSubscription = component['themeSubscription'];
+    if (!themeSubscription) {
+      throw new Error('themeSubscription should be defined');
+    }
+    const unsubscribeSpy = jest.spyOn(themeSubscription, 'unsubscribe');
     component.ngOnDestroy();
     expect(unsubscribeSpy).toHaveBeenCalled();
   });

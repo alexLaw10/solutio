@@ -1,4 +1,4 @@
-@import 'design-system/src/tokens/colors';
+@import '../../../libs/solutio-ds/src/styles/tokens/colors';
 
 @import 'assets/styles/base/reset';
 @import 'assets/styles/base/typography';
@@ -11,8 +11,9 @@
 @import 'assets/styles/components/shared';
 @import 'assets/styles/components/alert';
 @import 'assets/styles/components/buttons';
-@import 'assets/styles/components/inputs';
-@import 'assets/styles/components/design-system-elements';
+@import 'assets/styles/components/forms';
+@import 'assets/styles/components/button-loader';
+@import 'assets/styles/components/tables';
 
 @import 'assets/styles/state/loading';
 @import 'assets/styles/state/error';

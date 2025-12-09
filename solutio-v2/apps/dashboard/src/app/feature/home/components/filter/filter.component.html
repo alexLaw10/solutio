@@ -1,0 +1,65 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit($event)"
+  aria-label="Filtros de busca de dados meteorológicos"
+>
+  <fieldset class="filters">
+    <legend class="sr-only">Filtros de busca</legend>
+
+    <div class="filters__field">
+      <label for="start">Data de Início</label>
+      <input
+        type="date"
+        id="start"
+        name="start"
+        formControlName="start"
+        [attr.min]="minDate"
+        [attr.max]="maxDate"
+        required
+        (change)="startChange.emit($event)"
+      />
+    </div>
+
+    <div class="filters__field">
+      <label for="end">Data de Fim</label>
+      <input
+        type="date"
+        id="end"
+        name="end"
+        formControlName="end"
+        [attr.min]="minDate"
+        [attr.max]="maxDate"
+        required
+        (change)="endChange.emit($event)"
+      />
+    </div>
+
+    <div class="filters__field">
+      <label for="city">Cidade</label>
+      <select
+        id="city"
+        name="city"
+        formControlName="city"
+        required
+        (change)="cityChange.emit($event)"
+      >
+        <option value="" disabled>Selecione uma cidade</option>
+        <option *ngFor="let option of cityOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filters__action">
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="loading"
+        [attr.aria-label]="'Buscar dados meteorológicos'"
+      >
+        <solutio-v2-spinner *ngIf="loading" size="sm" color="white"></solutio-v2-spinner>
+        {{ loading ? 'Buscando...' : 'Buscar' }}
+      </button>
+    </div>
+  </fieldset>
+</form>
