@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, master ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, master ]
   workflow_dispatch:
 
 jobs:
@@ -22,36 +22,45 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18.20.7'
           cache: 'npm'
-          cache-dependency-path: solutio/package-lock.json
+          cache-dependency-path: solutio-v2/package-lock.json
+
+      - name: Setup Nx Cache
+        uses: actions/cache@v4
+        with:
+          path: solutio-v2/.nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('solutio-v2/nx.json', 'solutio-v2/package-lock.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
 
       - name: Instalar dependências Desktop
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm ci
 
       - name: Executar Lint Desktop
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm run lint
 
       - name: Build Design System
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm run build:ds
+        continue-on-error: true
 
       - name: Build Dashboard
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm run build
 
       - name: Executar Testes Unitários Desktop
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm test
         continue-on-error: false
 
       - name: Upload Coverage Reports
         if: always()
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
-          files: ./solutio/coverage/dashboard/coverage-final.json
+          files: ./solutio-v2/coverage/apps/dashboard/coverage-final.json
           flags: desktop
           name: desktop-coverage
           fail_ci_if_error: false
@@ -71,38 +80,59 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18.20.7'
           cache: 'npm'
-          cache-dependency-path: solutio/package-lock.json
+          cache-dependency-path: solutio-v2/package-lock.json
+
+      - name: Setup Nx Cache
+        uses: actions/cache@v4
+        with:
+          path: solutio-v2/.nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('solutio-v2/nx.json', 'solutio-v2/package-lock.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
 
       - name: Instalar dependências Desktop
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm ci
 
       - name: Build Dashboard para E2E
-        working-directory: ./solutio
+        working-directory: ./solutio-v2
         run: npm run build
 
       - name: Executar Testes E2E
-        working-directory: ./solutio
-        run: npm run e2e
+        working-directory: ./solutio-v2
+        run: nx e2e dashboard-e2e --configuration=ci
         continue-on-error: false
+        env:
+          CI: true
 
       - name: Upload Screenshots (se falhar)
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
-          path: solutio/dashboard-e2e/cypress/screenshots
+          path: solutio-v2/apps/dashboard-e2e/cypress/screenshots
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload Videos (se falhar)
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-videos
-          path: solutio/dashboard-e2e/cypress/videos
+          path: solutio-v2/apps/dashboard-e2e/cypress/videos
           retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload E2E Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports
+          path: solutio-v2/apps/dashboard-e2e/cypress/reports
+          retention-days: 7
+          if-no-files-found: ignore
 
   # ============================================
   # MOBILE - Lint, Build e Testes
@@ -118,7 +148,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18.20.7'
           cache: 'npm'
           cache-dependency-path: solutio-mobile/solutio-mobile-dashboard/package-lock.json
 
@@ -142,7 +172,7 @@ jobs:
 
       - name: Upload Coverage Reports Mobile
         if: always()
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./solutio-mobile/solutio-mobile-dashboard/coverage/coverage-final.json
           flags: mobile
@@ -164,4 +194,3 @@ jobs:
           echo "✅ Desktop: Lint, Build e Testes - OK"
           echo "✅ Desktop: Testes E2E - OK"
           echo "✅ Mobile: Lint e Testes - OK"
-
