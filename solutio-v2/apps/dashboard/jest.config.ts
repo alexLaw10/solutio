@@ -37,4 +37,6 @@ export default {
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  // Use single worker to avoid circular reference serialization issues
+  maxWorkers: 1,
 };

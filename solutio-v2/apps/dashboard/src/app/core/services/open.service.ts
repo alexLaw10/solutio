@@ -10,11 +10,13 @@ import {
   OpenMeteoClimateRoot,
   OpenMeteoHistoricalRoot
 } from '../interfaces/open-meteo-forecast';
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class OpenMeteoService {
-  private baseUrl = 'https://api.open-meteo.com';
+  private baseUrl = environment.api.openMeteo.baseUrl;
 
   constructor(private http: HttpClient) {}
 

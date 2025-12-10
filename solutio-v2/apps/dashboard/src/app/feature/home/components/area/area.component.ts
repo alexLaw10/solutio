@@ -4,11 +4,14 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { WeatherDataService } from '../../../../core/services/weather-data.service';
 import { Subject, takeUntil, filter } from 'rxjs';
 import { AreaChartOptions } from '../../../../core/interfaces/chart.interfaces';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { CHART_LABELS } from '../../../../core/constants/chart-labels';
+import { OpenMeteoForecastRoot } from '../../../../core/interfaces/open-meteo-forecast';
 
 @Component({
   selector: 'solutio-v2-area',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule, SpinnerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './area.component.html',
   styleUrls: ['./area.component.scss'],
@@ -58,7 +61,7 @@ export class AreaComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private processChartData(res: any): void {
+  private processChartData(res: OpenMeteoForecastRoot): void {
     const hourly = res.hourly;
 
     if (!hourly || !hourly.time || !hourly.temperature_2m) {
@@ -73,7 +76,7 @@ export class AreaComponent implements OnInit, OnDestroy {
     this.chartOptions = {
       series: [
         {
-          name: 'Temperatura (°C)',
+          name: CHART_LABELS.TEMPERATURE,
           data: temperatures.map((temp: number, index: number) => [times[index], temp])
         }
       ],
@@ -85,13 +88,13 @@ export class AreaComponent implements OnInit, OnDestroy {
       },
       xaxis: {
         type: 'datetime',
-        title: { text: 'Data/Hora' },
+        title: { text: CHART_LABELS.DATE_TIME },
         labels: {
           datetimeUTC: false
         }
       },
       yaxis: {
-        title: { text: 'Temperatura (°C)' }
+        title: { text: CHART_LABELS.TEMPERATURE }
       },
       stroke: {
         curve: 'smooth',
@@ -115,7 +118,7 @@ export class AreaComponent implements OnInit, OnDestroy {
         }
       },
       title: {
-        text: 'Temperatura ao Longo do Tempo',
+        text: CHART_LABELS.TEMPERATURE_OVER_TIME,
         align: 'center',
         style: { fontSize: '16px' }
       },

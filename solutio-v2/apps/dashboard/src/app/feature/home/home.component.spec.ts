@@ -56,12 +56,29 @@ describe('HomeComponent', () => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     weatherDataService = TestBed.inject(WeatherDataService) as jest.Mocked<WeatherDataService>;
+    
+    // Don't call detectChanges() in beforeEach to avoid rendering child components
+    // which can cause circular reference issues
   });
 
   afterEach(() => {
-    if (fixture) {
-      fixture.destroy();
+    // Complete subjects to avoid memory leaks
+    if (forecastSubject && !forecastSubject.closed) {
+      forecastSubject.complete();
     }
+    
+    // Cleanup component to unsubscribe from observables
+    if (component) {
+      try {
+        component.ngOnDestroy();
+      } catch (error) {
+        // Ignore cleanup errors
+      }
+    }
+    
+    // Clear mocks only - don't touch fixture or component references
+    // to avoid circular reference serialization issues
+    jest.clearAllMocks();
   });
 
   it('should create', () => {
@@ -79,35 +96,39 @@ describe('HomeComponent', () => {
 
     forecastSubject.next(mockForecastData);
     tick();
-    // Avoid detectChanges() to prevent Zone.js serialization issues with child components
+    // Avoid detectChanges() to prevent rendering child components that may cause circular references
+    // The component logic is tested without full rendering
 
     expect(component.currentTemp).toBe(27.5);
   }));
 
   it('should set currentTemp to 0 when current_weather is not available', fakeAsync(() => {
-    const dataWithoutCurrentWeather = {
+    const dataWithoutCurrentWeather: Partial<OpenMeteoForecastRoot> = {
       ...mockForecastData,
-      current_weather: undefined as any,
+      current_weather: undefined,
     };
 
     component.ngOnInit();
     tick();
 
-    forecastSubject.next(dataWithoutCurrentWeather);
+    forecastSubject.next(dataWithoutCurrentWeather as OpenMeteoForecastRoot);
     tick();
-    // Avoid detectChanges() to prevent Zone.js serialization issues with child components
+    // Avoid detectChanges() to prevent rendering child components that may cause circular references
 
     expect(component.currentTemp).toBe(0);
   }));
 
-  it('should unsubscribe on destroy', () => {
+  it('should unsubscribe on destroy', fakeAsync(() => {
     component.ngOnInit();
+    tick();
+    
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
     component.ngOnDestroy();
+    tick();
 
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-  });
+  }));
 });

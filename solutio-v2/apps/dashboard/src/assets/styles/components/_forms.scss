@@ -1,0 +1,159 @@
+// Form Filters Styles
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem 0;
+  border: none;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1;
+}
+
+.filters legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.filters__field {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  flex: 1;
+  min-width: 120px;
+  box-sizing: border-box;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 2;
+
+  input[type="text"],
+  input[type="date"],
+  input[type="search"],
+  input[type="email"],
+  input[type="number"],
+  select,
+  textarea {
+    display: block;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.5;
+    color: var(--design-system-text-primary, #333);
+    background-color: var(--design-system-background-primary, #fff);
+    border: 1px solid var(--design-system-border-primary, #ccc);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    min-height: 2.75rem;
+    pointer-events: auto !important;
+    user-select: text !important;
+    cursor: text !important;
+    position: relative;
+    z-index: 1;
+
+    &:hover:not(:disabled) {
+      border-color: var(--design-system-border-hover, #999);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--design-system-border-focus, #0066cc);
+      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: var(--design-system-background-disabled, #f5f5f5);
+    }
+  }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    padding-right: 2.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  flex: 1;
+  min-width: 120px;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.filters__action {
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  visibility: visible;
+  opacity: 1;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1024px) {
+  .filters {
+    gap: 0.625rem;
+  }
+
+  .filters label {
+    min-width: 100px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .filters label,
+  .filters__field {
+    min-width: calc(50% - 0.25rem);
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .filters {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filters label,
+  .filters__field {
+    min-width: 100%;
+    width: 100%;
+    font-size: 0.75rem;
+  }
+}

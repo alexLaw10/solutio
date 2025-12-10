@@ -8,7 +8,6 @@ import { OpenMeteoForecastRoot } from '../../../../core/interfaces/open-meteo-fo
 describe('KpiComponent', () => {
   let component: KpiComponent;
   let fixture: ComponentFixture<KpiComponent>;
-  let weatherDataService: jest.Mocked<WeatherDataService>;
   let forecastSubject: BehaviorSubject<OpenMeteoForecastRoot | null>;
   let loadingSubject: BehaviorSubject<boolean>;
 
@@ -51,7 +50,6 @@ describe('KpiComponent', () => {
 
     fixture = TestBed.createComponent(KpiComponent);
     component = fixture.componentInstance;
-    weatherDataService = TestBed.inject(WeatherDataService) as jest.Mocked<WeatherDataService>;
   });
 
   it('should create', () => {

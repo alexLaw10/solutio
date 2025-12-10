@@ -4,11 +4,14 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { WeatherDataService } from '../../../../core/services/weather-data.service';
 import { Subject, takeUntil, filter } from 'rxjs';
 import { BarChartOptions } from '../../../../core/interfaces/chart.interfaces';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { CHART_LABELS } from '../../../../core/constants/chart-labels';
+import { OpenMeteoForecastRoot } from '../../../../core/interfaces/open-meteo-forecast';
 
 @Component({
   selector: 'solutio-v2-bar',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule, SpinnerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './bar.component.html',
   styleUrls: ['./bar.component.scss'],
@@ -58,7 +61,7 @@ export class BarComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private processChartData(res: any): void {
+  private processChartData(res: OpenMeteoForecastRoot): void {
     const hourly = res.hourly;
 
     if (!hourly || !hourly.time || !hourly.temperature_2m) {
@@ -86,13 +89,13 @@ export class BarComponent implements OnInit, OnDestroy {
 
     this.chartOptions = {
       series: [
-        { name: 'Temperatura Média (°C)', data: seriesData }
+        { name: CHART_LABELS.TEMPERATURE_AVERAGE, data: seriesData }
       ],
       chart: { type: 'bar', height: 350, toolbar: { show: false } },
-      xaxis: { categories, title: { text: 'Data' } },
-      yaxis: { title: { text: 'Temperatura (°C)' } },
+      xaxis: { categories, title: { text: CHART_LABELS.DATE } },
+      yaxis: { title: { text: CHART_LABELS.TEMPERATURE } },
       dataLabels: { enabled: true, formatter: (val: number) => `${val}°C` },
-      title: { text: 'Temperatura Média Diária', align: 'center', style: { fontSize: '16px' } },
+      title: { text: CHART_LABELS.TEMPERATURE_DAILY_AVERAGE, align: 'center', style: { fontSize: '16px' } },
       responsive: [
         {
           breakpoint: 768,

@@ -46,6 +46,22 @@ button,
   }
 
   // Button variants
+  &--primary {
+    background-color: var(--design-system-color-primary, var(--design-system-primary));
+    color: var(--design-system-color-on-primary, var(--design-system-white));
+    border-color: var(--design-system-color-primary, var(--design-system-primary));
+
+    &:hover:not(:disabled) {
+      background-color: var(--design-system-color-primary-hover, var(--design-system-primary-hover));
+      border-color: var(--design-system-color-primary-hover, var(--design-system-primary-hover));
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--design-system-color-primary-active, var(--design-system-primary-active));
+      border-color: var(--design-system-color-primary-active, var(--design-system-primary-active));
+    }
+  }
+
   &--secondary {
     background-color: var(--design-system-secondary);
     color: var(--design-system-text-primary);

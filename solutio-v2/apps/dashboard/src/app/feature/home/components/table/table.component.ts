@@ -7,9 +7,21 @@ import { TableRow, City } from '../../../../core/interfaces/table.interfaces';
 import { DateFormatPipe } from '../../../../shared/pipes/date-format.pipe';
 import { PercentagePipe } from '../../../../shared/pipes/percentage.pipe';
 import { SpeedPipe } from '../../../../shared/pipes/speed.pipe';
+import { FilterComponent } from '../filter/filter.component';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { ERROR_MESSAGES, VALIDATION_MESSAGES, INFO_MESSAGES } from '../../../../core/constants/messages';
+import { CITIES, DEFAULT_CITY } from '../../../../core/constants/cities';
+import { DATE_CONSTANTS } from '../../../../core/constants/dates';
+import { ARIA_LABEL_TEMPLATES } from '../../../../core/constants/units';
 
-const MIN_DATE = '2025-08-28';
-const MAX_DATE = '2025-12-14';
+type ForecastHourly = {
+  time: string[];
+  temperature_2m: number[];
+  precipitation_probability?: number[];
+  relative_humidity_2m?: number[];
+  windspeed_10m?: number[];
+  weathercode?: number[];
+};
 
 @Component({
   selector: 'solutio-v2-table',
@@ -19,7 +31,9 @@ const MAX_DATE = '2025-12-14';
     ReactiveFormsModule,
     DateFormatPipe,
     PercentagePipe,
-    SpeedPipe
+    SpeedPipe,
+    FilterComponent,
+    SpinnerComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './table.component.html',
@@ -36,15 +50,9 @@ export class TableComponent implements OnInit, OnDestroy {
   public loading = false;
   public loadingMore = false;
   private readonly itemsPerPage = 5;
-  public cities: City[] = [
-    { name: 'João Pessoa', lat: -7.1153, lng: -34.8641 },
-    { name: 'São Paulo', lat: -23.5505, lng: -46.6333 },
-    { name: 'Rio de Janeiro', lat: -22.9068, lng: -43.1729 },
-    { name: 'Brasília', lat: -15.7942, lng: -47.8822 }
-  ];
-
-  public minDate = MIN_DATE;
-  public maxDate = MAX_DATE;
+  public cities: City[] = CITIES;
+  public minDate = DATE_CONSTANTS.MIN_DATE;
+  public maxDate = DATE_CONSTANTS.MAX_DATE;
 
   public get cityOptions(): Array<{ label: string; value: string }> {
     return this.cities.map(city => ({
@@ -61,9 +69,9 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.form = this.fb.group({
-      start: ['2025-08-28'],
-      end: ['2025-08-29'],
-      city: ['João Pessoa']
+      start: [DATE_CONSTANTS.DEFAULT_START_DATE],
+      end: [DATE_CONSTANTS.DEFAULT_END_DATE],
+      city: [DEFAULT_CITY]
     });
 
     this.weatherDataService.getForecastData$()
@@ -104,31 +112,36 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   public onStartDateChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target?.value;
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
     if (value) {
       this.form.patchValue({ start: value });
-      this.applyFilter();
+      this.cdr.markForCheck();
     }
   }
 
   public onEndDateChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const value = target?.value;
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
     if (value) {
       this.form.patchValue({ end: value });
-      this.applyFilter();
+      this.cdr.markForCheck();
     }
   }
 
   public onCityChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const value = target?.value;
-    if (value) {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value;
+    
+    if (value && value !== '') {
       this.form.patchValue({ city: value });
-      this.applyFilter();
+      this.cdr.markForCheck();
     }
   }
+
+
 
   public applyFilter(): void {
     const { start, end, city } = this.form.value;
@@ -138,15 +151,17 @@ export class TableComponent implements OnInit, OnDestroy {
 
     const selectedCity = this.cities.find(c => c.name === city);
     if (!selectedCity) {
-      this.warningMessage = 'Cidade não encontrada.';
+      this.warningMessage = ERROR_MESSAGES.CITY_NOT_FOUND;
+      this.cdr.markForCheck();
       return;
     }
 
     const { lat, lng } = selectedCity;
     this.weatherDataService.updateLocation(lat, lng);
+    this.cdr.markForCheck();
   }
 
-  private processForecastData(res: any): void {
+  private processForecastData(res: { hourly: ForecastHourly }): void {
     const hourly = res.hourly;
 
     const rows = hourly.time.map((t: string, index: number) => ({
@@ -188,22 +203,22 @@ export class TableComponent implements OnInit, OnDestroy {
   private validateDates(start: string, end: string) {
     let startDate = new Date(start);
     let endDate = new Date(end);
-    const minDateObj = new Date(MIN_DATE);
-    const maxDateObj = new Date(MAX_DATE);
+    const minDateObj = new Date(DATE_CONSTANTS.MIN_DATE);
+    const maxDateObj = new Date(DATE_CONSTANTS.MAX_DATE);
     let warning = '';
 
     if (startDate < minDateObj) {
-      warning += 'A data inicial foi ajustada para 28/08/2025. ';
+      warning += VALIDATION_MESSAGES.START_DATE_ADJUSTED;
       startDate = minDateObj;
     }
 
     if (endDate > maxDateObj) {
-      warning += 'A data final foi ajustada para 14/12/2025. ';
+      warning += VALIDATION_MESSAGES.END_DATE_ADJUSTED;
       endDate = maxDateObj;
     }
 
     if (startDate > endDate) {
-      warning += 'Intervalo inválido. Intervalo ajustado automaticamente. ';
+      warning += VALIDATION_MESSAGES.INVALID_DATE_RANGE;
       startDate = minDateObj;
       endDate = maxDateObj;
     }
@@ -232,24 +247,24 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   public getTemperatureAriaLabel(temp: number): string {
-    return `Temperatura: ${temp} graus Celsius`;
+    return ARIA_LABEL_TEMPLATES.TEMPERATURE(temp);
   }
 
   public getPrecipitationAriaLabel(prec: number): string {
-    return `Probabilidade de precipitação: ${prec} por cento`;
+    return ARIA_LABEL_TEMPLATES.PRECIPITATION(prec);
   }
 
   public getHumidityAriaLabel(hum: number | null): string {
     if (hum === null || hum === undefined) {
-      return 'Umidade não disponível';
+      return INFO_MESSAGES.UNAVAILABLE_HUMIDITY;
     }
-    return `Umidade: ${hum} por cento`;
+    return ARIA_LABEL_TEMPLATES.HUMIDITY(hum);
   }
 
   public getWindSpeedAriaLabel(wind: number | null): string {
     if (wind === null || wind === undefined) {
-      return 'Velocidade do vento não disponível';
+      return INFO_MESSAGES.UNAVAILABLE_WIND_SPEED;
     }
-    return `Velocidade do vento: ${wind} quilômetros por hora`;
+    return ARIA_LABEL_TEMPLATES.WIND_SPEED(wind);
   }
 }

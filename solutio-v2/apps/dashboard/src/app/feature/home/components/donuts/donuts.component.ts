@@ -4,11 +4,15 @@ import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { WeatherDataService } from '../../../../core/services/weather-data.service';
 import { Subject, takeUntil, filter } from 'rxjs';
 import { DonutOptions } from '../../../../core/interfaces/chart.interfaces';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { CHART_LABELS } from '../../../../core/constants/chart-labels';
+import { UNITS } from '../../../../core/constants/units';
+import { OpenMeteoForecastRoot } from '../../../../core/interfaces/open-meteo-forecast';
 
 @Component({
   selector: 'solutio-v2-donut',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule, SpinnerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './donuts.component.html',
   styleUrls: ['./donuts.component.scss'],
@@ -60,7 +64,7 @@ export class DonutsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private processDonutData(res: any): void {
+  private processDonutData(res: OpenMeteoForecastRoot): void {
     const currentTemp = res.current_weather?.temperature;
 
     if (currentTemp === undefined || currentTemp === null) {
@@ -80,8 +84,8 @@ export class DonutsComponent implements OnInit, OnDestroy {
         toolbar: { show: false }
       },
       labels: [
-        `Temperatura Atual (${tempAtual}°C)`,
-        `Restante até 50°C (${restante}°C)`
+        `${CHART_LABELS.TEMPERATURE_CURRENT} (${tempAtual}${UNITS.CELSIUS})`,
+        `${CHART_LABELS.TEMPERATURE_REMAINING} (${restante}${UNITS.CELSIUS})`
       ],
       legend: {
         position: 'bottom'

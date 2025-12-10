@@ -57,6 +57,7 @@ describe('OpenMeteoService', () => {
   });
 
   it('should get GFS forecast', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockData = {} as any;
     service.getGfs(-7.1153, -34.8641).subscribe();
     const req = httpMock.expectOne((request) => request.url.includes('/v1/gfs'));
@@ -65,6 +66,7 @@ describe('OpenMeteoService', () => {
   });
 
   it('should get GEM forecast', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockData = {} as any;
     service.getGem(-7.1153, -34.8641).subscribe();
     const req = httpMock.expectOne((request) => request.url.includes('/v1/gem'));
@@ -73,6 +75,7 @@ describe('OpenMeteoService', () => {
   });
 
   it('should get ECMWF forecast', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockData = {} as any;
     service.getEcmwf(-7.1153, -34.8641).subscribe();
     const req = httpMock.expectOne((request) => request.url.includes('/v1/ecmwf'));
@@ -81,6 +84,7 @@ describe('OpenMeteoService', () => {
   });
 
   it('should get climate data', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockData = {} as any;
     service.getClimate(-7.1153, -34.8641, '2025-01-01', '2025-12-31').subscribe();
     const req = httpMock.expectOne((request) => request.url.includes('/v1/climate'));
@@ -89,6 +93,7 @@ describe('OpenMeteoService', () => {
   });
 
   it('should get historical weather', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockData = {} as any;
     service.getHistoricalWeather(-7.1153, -34.8641, '2025-01-01', '2025-12-31').subscribe();
     const req = httpMock.expectOne((request) => request.url.includes('/v1/forecast'));

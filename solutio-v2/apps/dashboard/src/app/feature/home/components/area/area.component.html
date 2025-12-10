@@ -1,6 +1,7 @@
 <div *ngIf="loading" class="area-loading" role="status" aria-live="polite" aria-label="Carregando gráfico de área">
+  <solutio-v2-spinner size="md"></solutio-v2-spinner>
   <span class="sr-only">Carregando dados do gráfico</span>
-  Carregando gráfico...
+  <span>Carregando gráfico...</span>
 </div>
 
 <div *ngIf="error && !loading" class="area-error" role="alert" aria-live="assertive">

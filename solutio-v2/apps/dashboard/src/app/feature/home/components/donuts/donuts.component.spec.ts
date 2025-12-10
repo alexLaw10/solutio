@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DonutsComponent } from './donuts.component';
@@ -15,7 +15,6 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 describe('DonutsComponent', () => {
   let component: DonutsComponent;
   let fixture: ComponentFixture<DonutsComponent>;
-  let weatherDataService: jest.Mocked<WeatherDataService>;
   let forecastSubject: BehaviorSubject<OpenMeteoForecastRoot | null>;
   let loadingSubject: BehaviorSubject<boolean>;
   let errorSubject: BehaviorSubject<string | null>;
@@ -61,7 +60,36 @@ describe('DonutsComponent', () => {
 
     fixture = TestBed.createComponent(DonutsComponent);
     component = fixture.componentInstance;
-    weatherDataService = TestBed.inject(WeatherDataService) as jest.Mocked<WeatherDataService>;
+  });
+
+  afterEach(() => {
+    // Cleanup component first to avoid ApexCharts DOM errors
+    if (component) {
+      try {
+        component.ngOnDestroy();
+      } catch (error) {
+        // Ignore cleanup errors
+      }
+    }
+    
+    if (forecastSubject && !forecastSubject.closed) {
+      forecastSubject.complete();
+    }
+    if (loadingSubject && !loadingSubject.closed) {
+      loadingSubject.complete();
+    }
+    if (errorSubject && !errorSubject.closed) {
+      errorSubject.complete();
+    }
+    
+    // Destroy fixture last, wrapping in try-catch to avoid ApexCharts errors
+    if (fixture) {
+      try {
+        fixture.destroy();
+      } catch (error) {
+        // Ignore ApexCharts cleanup errors in tests (getScreenCTM is not available in test environment)
+      }
+    }
   });
 
   it('should create', () => {
@@ -69,6 +97,7 @@ describe('DonutsComponent', () => {
   });
 
   it('should initialize with loading false and error false', () => {
+    component.ngOnInit();
     expect(component.loading).toBe(false);
     expect(component.error).toBe(false);
   });
@@ -80,6 +109,7 @@ describe('DonutsComponent', () => {
     forecastSubject.next(mockForecastData);
     tick();
     // Don't call detectChanges() to avoid ApexCharts rendering issues in tests
+    flush();
 
     expect(component.donutOptions).toBeDefined();
     expect(component.donutOptions.series).toEqual([27.5, 22.5]); // 27.5 and 50 - 27.5 = 22.5
@@ -90,17 +120,26 @@ describe('DonutsComponent', () => {
   it('should set error when current_weather temperature is undefined', fakeAsync(() => {
     const dataWithoutTemp = {
       ...mockForecastData,
-      current_weather: undefined as any,
-    };
+      current_weather: undefined,
+    } as any as OpenMeteoForecastRoot;
 
     component.ngOnInit();
     tick();
 
+    // Set errorSubject to null first to avoid interference
+    errorSubject.next(null);
+    tick();
+
     forecastSubject.next(dataWithoutTemp);
     tick();
-    // Don't call detectChanges() to avoid ApexCharts rendering issues in tests
-
+    // Check error immediately after processing, before errorSubject can reset it
     expect(component.error).toBe(true);
+    
+    // Now process remaining ticks
+    flush();
+    
+    // Error might be reset by errorSubject, but it should have been set at least once
+    // The important thing is that processDonutData correctly identifies the error
   }));
 
   it('should set error when current_weather temperature is null', fakeAsync(() => {
@@ -108,18 +147,27 @@ describe('DonutsComponent', () => {
       ...mockForecastData,
       current_weather: {
         ...mockForecastData.current_weather,
-        temperature: null as any,
+        temperature: null,
       },
-    };
+    } as any as OpenMeteoForecastRoot;
 
     component.ngOnInit();
     tick();
 
+    // Set errorSubject to null first to avoid interference
+    errorSubject.next(null);
+    tick();
+
     forecastSubject.next(dataWithNullTemp);
     tick();
-    // Don't call detectChanges() to avoid ApexCharts rendering issues in tests
-
+    // Check error immediately after processing, before errorSubject can reset it
     expect(component.error).toBe(true);
+    
+    // Now process remaining ticks
+    flush();
+    
+    // Error might be reset by errorSubject, but it should have been set at least once
+    // The important thing is that processDonutData correctly identifies the error
   }));
 
   it('should update loading state', fakeAsync(() => {
@@ -129,12 +177,14 @@ describe('DonutsComponent', () => {
     loadingSubject.next(true);
     tick();
     fixture.detectChanges();
+    flush();
 
     expect(component.loading).toBe(true);
 
     loadingSubject.next(false);
     tick();
     fixture.detectChanges();
+    flush();
 
     expect(component.loading).toBe(false);
   }));
@@ -146,18 +196,20 @@ describe('DonutsComponent', () => {
     errorSubject.next('Network error');
     tick();
     fixture.detectChanges();
+    flush();
 
     expect(component.error).toBe(true);
 
     errorSubject.next(null);
     tick();
     fixture.detectChanges();
+    flush();
 
     expect(component.error).toBe(false);
   }));
 
   it('should calculate restante correctly when temp is above 50', fakeAsync(() => {
-    const highTempData = {
+    const highTempData: OpenMeteoForecastRoot = {
       ...mockForecastData,
       current_weather: {
         ...mockForecastData.current_weather,
@@ -171,18 +223,24 @@ describe('DonutsComponent', () => {
     forecastSubject.next(highTempData);
     tick();
     // Don't call detectChanges() to avoid ApexCharts rendering issues in tests
+    flush();
 
+    expect(component.donutOptions).toBeDefined();
+    expect(component.donutOptions.series[0]).toBe(55); // tempAtual = 55
     expect(component.donutOptions.series[1]).toBe(0); // max(0, 50 - 55) = 0
   }));
 
-  it('should unsubscribe on destroy', () => {
+  it('should unsubscribe on destroy', fakeAsync(() => {
     component.ngOnInit();
+    tick();
+    
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
     component.ngOnDestroy();
+    flush();
 
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-  });
+  }));
 });

@@ -1,20 +1,27 @@
 .donut-loading,
 .donut-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
   padding: 2rem;
   text-align: center;
-  color: var(--color-text-secondary);
-  background: var(--color-white);
+  color: var(--design-system-text-secondary);
+  background: var(--design-system-background-primary);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-sm);
+  min-height: 200px;
+  box-sizing: border-box;
 }
 
 .donut-error {
-  color: var(--color-danger);
-  background: rgba(220, 53, 69, 0.1);
+  color: var(--design-system-error);
+  background: var(--design-system-error-bg);
 }
 
 [data-theme="dark"] {
   .donut-loading {
-    background: var(--color-gray-800);
+    background: var(--design-system-background-secondary);
   }
 }

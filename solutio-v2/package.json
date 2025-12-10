@@ -11,7 +11,9 @@
     "test:e2e": "nx e2e dashboard-e2e",
     "test:e2e:headless": "nx e2e dashboard-e2e --headless",
     "lint": "nx lint dashboard",
-    "lint:ds": "nx lint solutio-ds"
+    "lint:ds": "nx lint solutio-ds",
+    "storybook": "cd libs/solutio-ds && npm run storybook",
+    "build-storybook": "cd libs/solutio-ds && npm run build-storybook"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +52,11 @@
     "@schematics/angular": "~16.2.0",
     "@stencil/core": "^4.38.3",
     "@stencil/sass": "^3.2.3",
+    "@storybook/addon-essentials": "^7.6.20",
+    "@storybook/addon-interactions": "^7.6.20",
+    "@storybook/addon-links": "^7.6.20",
+    "@storybook/blocks": "^7.6.20",
+    "@storybook/web-components": "^7.6.20",
     "@types/jest": "^29.4.0",
     "@types/node": "16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
@@ -62,6 +69,7 @@
     "jest-environment-jsdom": "^29.4.1",
     "jest-preset-angular": "~13.1.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "lit": "^3.3.1",
     "nx": "16.10.0",
     "prettier": "^2.6.2",
     "ts-jest": "^29.1.0",
