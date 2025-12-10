@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { OpenMeteoService } from './open.service';
 import { OpenMeteoForecastRoot } from '../interfaces/open-meteo-forecast';
 import { ERROR_MESSAGES } from '../constants/messages';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,10 @@ export class WeatherDataService {
   private loading$ = new BehaviorSubject<boolean>(false);
   private error$ = new BehaviorSubject<string | null>(null);
   
-  private currentLocation = { lat: -7.1153, lng: -34.8641 };
+  private currentLocation = {
+    lat: environment.defaultLocation.lat,
+    lng: environment.defaultLocation.lng
+  };
   private initialized = false;
 
   constructor(private openMeteo: OpenMeteoService) {}
